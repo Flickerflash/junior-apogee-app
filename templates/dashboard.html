@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Junior Apogee – AI Agent Eval Platform</title>
+  <link rel="stylesheet" href="/static/css/dashboard.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <!-- ─── Header ───────────────────────────────────────────────────── -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo">
+        <span class="logo-icon">⬡</span>
+        <span class="logo-text">Junior <strong>Apogee</strong></span>
+      </div>
+      <nav class="nav-tabs">
+        <button class="nav-tab active" data-tab="overview">Overview</button>
+        <button class="nav-tab" data-tab="agents">Agents</button>
+        <button class="nav-tab" data-tab="tasks">Tasks</button>
+        <button class="nav-tab" data-tab="governance">Governance</button>
+        <button class="nav-tab" data-tab="evaluate">Evaluate</button>
+      </nav>
+    </div>
+    <div class="header-right">
+      <span class="status-dot live"></span>
+      <span class="status-text">Live</span>
+      <span class="version-badge">v0.1.0-beta</span>
+      <button class="btn btn-primary" id="refreshBtn">↻ Refresh</button>
+    </div>
+  </header>
+
+  <!-- ─── Main ─────────────────────────────────────────────────────── -->
+  <main class="main">
+
+    <!-- ══ TAB: OVERVIEW ══ -->
+    <section id="tab-overview" class="tab-content active">
+
+      <!-- KPI bar -->
+      <div class="kpi-row" id="kpiRow">
+        <div class="kpi-card">
+          <div class="kpi-label">Total Evals Run</div>
+          <div class="kpi-value" id="kpiTotal">—</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Avg Task Success</div>
+          <div class="kpi-value" id="kpiSuccess">—</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Avg Faithfulness</div>
+          <div class="kpi-value" id="kpiFaith">—</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Ethics/Rights Pass</div>
+          <div class="kpi-value" id="kpiEthics">—</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Drift Alerts</div>
+          <div class="kpi-value alert" id="kpiAlerts">—</div>
+        </div>
+      </div>
+
+      <!-- Charts row -->
+      <div class="charts-row">
+        <div class="chart-card">
+          <div class="chart-title">Agent Performance Radar</div>
+          <canvas id="radarChart"></canvas>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Task Success Rate by Agent</div>
+          <canvas id="barChart"></canvas>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Eval Layer Distribution</div>
+          <canvas id="donutChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Score table -->
+      <div class="card mt-2">
+        <div class="card-header">
+          <span>Agent Metrics Summary</span>
+          <span class="timestamp" id="snapshotTime"></span>
+        </div>
+        <div class="table-wrap">
+          <table class="metrics-table" id="metricsTable">
+            <thead>
+              <tr>
+                <th>Agent</th>
+                <th>Task Success</th>
+                <th>Faithfulness</th>
+                <th>Tool Accuracy</th>
+                <th>Ethics/Rights</th>
+                <th>Archival</th>
+                <th>Overall</th>
+                <th>Avg Latency</th>
+                <th>Avg Cost</th>
+              </tr>
+            </thead>
+            <tbody id="metricsBody">
+              <tr><td colspan="9" class="loading">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Drift alerts -->
+      <div class="card mt-2" id="driftSection" style="display:none">
+        <div class="card-header alert-header">
+          <span>⚠ Drift Alerts</span>
+        </div>
+        <div id="driftAlerts" class="alerts-list"></div>
+      </div>
+
+      <!-- History sparklines -->
+      <div class="card mt-2">
+        <div class="card-header">Task Success Rate – Rolling History (last 20 evals)</div>
+        <canvas id="historyChart" style="max-height:200px"></canvas>
+      </div>
+    </section>
+
+    <!-- ══ TAB: AGENTS ══ -->
+    <section id="tab-agents" class="tab-content">
+      <div class="agents-grid" id="agentsGrid">
+        <div class="loading">Loading agents…</div>
+      </div>
+    </section>
+
+    <!-- ══ TAB: TASKS ══ -->
+    <section id="tab-tasks" class="tab-content">
+      <div class="card">
+        <div class="card-header">Recent Task Results</div>
+        <div class="table-wrap">
+          <table class="metrics-table" id="tasksTable">
+            <thead>
+              <tr>
+                <th>Family</th>
+                <th>Task Name</th>
+                <th>Agent</th>
+                <th>Layer</th>
+                <th>Score</th>
+                <th>Status</th>
+                <th>Latency</th>
+              </tr>
+            </thead>
+            <tbody id="tasksBody">
+              <tr><td colspan="7" class="loading">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ TAB: GOVERNANCE ══ -->
+    <section id="tab-governance" class="tab-content">
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <div class="kpi-label">Compliance Score</div>
+          <div class="kpi-value" id="govScore">—</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Total Checks</div>
+          <div class="kpi-value" id="govTotal">—</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Passed</div>
+          <div class="kpi-value good" id="govPassed">—</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Critical Flags</div>
+          <div class="kpi-value alert" id="govCritical">—</div>
+        </div>
+      </div>
+
+      <div class="charts-row">
+        <div class="chart-card" style="flex:2">
+          <div class="chart-title">OWASP Agentic Top-10 Compliance</div>
+          <canvas id="owaspChart"></canvas>
+        </div>
+        <div class="chart-card" style="flex:1">
+          <div class="chart-title">Flag Distribution</div>
+          <canvas id="flagPieChart"></canvas>
+        </div>
+      </div>
+
+      <div class="card mt-2">
+        <div class="card-header">Governance Flags</div>
+        <div class="table-wrap">
+          <table class="metrics-table" id="govTable">
+            <thead>
+              <tr>
+                <th>OWASP ID</th>
+                <th>Category</th>
+                <th>Severity</th>
+                <th>Agent</th>
+                <th>Description</th>
+                <th>Mitigated</th>
+              </tr>
+            </thead>
+            <tbody id="govBody">
+              <tr><td colspan="6" class="loading">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ TAB: EVALUATE ══ -->
+    <section id="tab-evaluate" class="tab-content">
+      <div class="evaluate-layout">
+        <div class="eval-form-card card">
+          <div class="card-header">Ad-Hoc Agent Evaluation</div>
+          <div class="form-group">
+            <label>Agent</label>
+            <select id="evalAgent" class="form-control">
+              <option value="Apogee">Apogee</option>
+              <option value="Prodigy">Prodigy</option>
+              <option value="Reciprocity">Reciprocity</option>
+              <option value="COLLEEN">COLLEEN</option>
+              <option value="DemiJoule">DemiJoule</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Task Name</label>
+            <input type="text" id="evalTaskName" class="form-control" placeholder="e.g. Research climate change">
+          </div>
+          <div class="form-group">
+            <label>Agent Output</label>
+            <textarea id="evalOutput" class="form-control" rows="8"
+              placeholder="Paste the agent's raw output here…"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Tool Calls (JSON array, optional)</label>
+            <textarea id="evalTools" class="form-control" rows="4"
+              placeholder='[{"tool_name": "web_search", "parameters": {"query": "test"}}]'></textarea>
+          </div>
+          <button class="btn btn-primary btn-full" id="runEvalBtn">▶ Run Evaluation</button>
+        </div>
+
+        <div class="eval-results-card card" id="evalResults" style="display:none">
+          <div class="card-header">Evaluation Result</div>
+          <div id="evalResultBody"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ─── Live ticker ──────────────────────────────────────────────── -->
+  <div class="live-ticker" id="liveTicker">
+    <span class="ticker-icon">📡</span>
+    <span id="tickerText">Connecting to live stream…</span>
+  </div>
+
+  <script src="/static/js/dashboard.js"></script>
+</body>
+</html>

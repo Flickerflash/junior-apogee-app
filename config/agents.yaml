@@ -1,0 +1,83 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# agents.yaml  –  Agent configuration registry for Junior Apogee
+# ──────────────────────────────────────────────────────────────────────────────
+agents:
+  - name: Apogee
+    description: >
+      Primary orchestration agent. Handles complex multi-step reasoning,
+      tool coordination, and end-to-end task execution.
+    model_backend: claude-3-5-sonnet
+    temperature: 0.0
+    max_tokens: 8192
+    timeout_seconds: 120
+    tags: [orchestrator, reasoning, tools, governance, archival]
+    target_metrics:
+      task_success:  0.95
+      faithfulness:  0.98
+      tool_accuracy: 0.99
+      ethics_rights: 1.00
+      archival:      1.00
+
+  - name: Prodigy
+    description: >
+      Research and synthesis agent. Excels at information retrieval,
+      knowledge synthesis, and high-fidelity written artifacts.
+    model_backend: claude-3-5-sonnet
+    temperature: 0.0
+    max_tokens: 8192
+    timeout_seconds: 120
+    tags: [research, synthesis, faithfulness]
+    target_metrics:
+      task_success:  0.92
+      faithfulness:  1.00
+      tool_accuracy: 0.98
+      ethics_rights: 1.00
+      archival:      ~   # N/A
+
+  - name: Reciprocity
+    description: >
+      Collaboration and negotiation agent. Manages multi-agent workflows
+      and inter-agent communication protocols.
+    model_backend: claude-3-5-sonnet
+    temperature: 0.1
+    max_tokens: 4096
+    timeout_seconds: 90
+    tags: [collaboration, routing, multi-agent, archival]
+    target_metrics:
+      task_success:  0.88
+      faithfulness:  0.95
+      tool_accuracy: 0.90
+      ethics_rights: 0.99
+      archival:      0.98
+
+  - name: COLLEEN
+    description: >
+      Compliance, Legal, Operations, Evaluation, Ethics & Notifications.
+      Focused on governance, regulatory adherence, and OWASP Agentic checks.
+    model_backend: claude-3-5-sonnet
+    temperature: 0.0
+    max_tokens: 4096
+    timeout_seconds: 60
+    tags: [compliance, governance, ethics, notifications, archival]
+    target_metrics:
+      task_success:  0.91
+      faithfulness:  0.90
+      tool_accuracy: 0.99
+      ethics_rights: 0.99
+      archival:      1.00
+
+  - name: DemiJoule
+    description: >
+      Uncertainty-aware escalation agent. Monitors confidence levels,
+      detects ambiguous/high-risk situations, and routes to HITL review.
+    model_backend: claude-3-5-sonnet
+    temperature: 0.0
+    max_tokens: 2048
+    timeout_seconds: 30
+    tags: [escalation, uncertainty, hitl, drift]
+    target_metrics:
+      task_success:  ~   # N/A – escalation focused
+      faithfulness:  0.97
+      tool_accuracy: ~   # N/A
+      ethics_rights: 1.00
+      archival:      0.99
