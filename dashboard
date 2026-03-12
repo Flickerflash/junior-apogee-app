@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Junior Apogee – Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+      background: #020617;
+      color: #e5e7eb;
+    }
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 16px 48px;
+    }
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 0.25rem;
+    }
+    .subtitle {
+      color: #9ca3af;
+      margin-bottom: 24px;
+    }
+    .card {
+      background: radial-gradient(circle at top left, #0f172a, #020617 60%);
+      border-radius: 16px;
+      padding: 20px 18px 24px;
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      margin-bottom: 24px;
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header>
+      <h1>Junior Apogee – Agent Evaluation Dashboard</h1>
+      <p class="subtitle">v0.1 • Capability matrix prototype</p>
+    </header>
+
+    <section class="card">
+      <h2>Agent Capability Matrix</h2>
+      <p class="subtitle">Overall evaluation scores across key dimensions</p>
+      <div id="capability-matrix-chart" style="height: 420px;"></div>
+    </section>
+  </main>
+
+  <script src="https://cdn.plot.ly/plotly-2.30.0.min.js"></script>
+  <!-- Paste the capability matrix <script> block I gave you earlier right here -->
+</body>
+</html>
