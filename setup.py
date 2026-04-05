@@ -1,10 +1,10 @@
-"""
-setup.py for Junior Apogee
-"""
-from setuptools import setup, find_packages
+"""setup.py for Junior Apogee."""
+
+from setuptools import find_packages, setup
+
 
 setup(
-    name="junior-apogee",
+    name="junior-apogee-app",
     version="0.1.0b0",
     description="AI Agent Evaluation & QA Platform",
     author="Ndr (Flickerflash)",
@@ -24,5 +24,11 @@ setup(
         "colorama>=0.4.6",
         "tqdm>=4.66.0",
         "loguru>=0.7.0",
+        "prometheus-client>=0.24.0",
     ],
+    entry_points={
+        "console_scripts": [
+            "junior-apogee=junior_apogee.cli:main",
+        ]
+    },
 )

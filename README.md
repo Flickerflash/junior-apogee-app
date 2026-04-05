@@ -1,98 +1,79 @@
-## Quick Overview (In Plain Language)
-
-This project is a small “test bench” for AI systems.
-
-In simple terms:
-- You give an AI a task (for example: answer a question or summarize text).
-- This project runs the AI through that task in a controlled way.
-- It records what happened so you can see how well the AI behaved or where it failed.
-
-Right now this is an early **v0.1** version:
-- It’s focused on showing my thinking and structure.
-- Some parts are still work-in-progress or stubs.
-- You can still read the layout and comments to see how I design and evaluate AI behavior.
-
 # Junior Apogee App
 
-**Production-ready AI agent evaluation and QA platform**
+Junior Apogee is an evaluation and QA workbench for multi-agent AI systems.
+It includes a Flask dashboard, layered evaluation logic, governance checks,
+and reporting scripts for local experimentation.
 
-Built on a 3-layer evaluation spine aligned with 2025–26 agentic AI best practices. Multi-agent scoring, automated testing, real-time dashboards, and comprehensive governance compliance checks (OWASP Agentic Top 10).
+## Current Source of Truth
 
-## Features
+The active implementation lives in `src/junior_apogee/` and the dashboard entry
+point is the repository-root `app.py`.
 
-- **Multi-Agent Evaluation**: Score reasoning, tool-use, and outcomes across specialized agents (Apogee, Prodigy, Reciprocity, COLLEEN, DemiJoule).
-- **Automated Test Execution**: ~170 task-family tests with deterministic checks + LLM-as-judge.
-- **Real-time Dashboards**: Metrics tracking and drift monitoring.
-- **Governance Compliance**: Rights, ethics, hallucination, and archival quality checks.
-- **Multi-Agent Collaboration**: End-to-end workflow validation.
+The top-level `junior_apogee_app/` package is still present for older examples
+and tests, but new work should target the `src/` implementation.
 
-## Architecture
+## What Is In This Repo
 
-```text
-Tests & Data → Automated Eval Layer → Metrics & Dashboards → Drift Monitoring → HITL
+- `app.py` - dashboard backend and demo API routes
+- `src/junior_apogee/` - models, evaluation engine, governance, metrics, config
+- `config/` - YAML definitions for agents, metrics, and task families
+- `scripts/run_eval.py` - pytest wrapper for running subsets of the suite
+- `scripts/generate_report.py` - synthetic report generator
+- `tests/` - unit, integration, and legacy compatibility tests
 
+## Quick Start
 
-## 5-Minute Quick Start
-
-Get Junior Apogee running and execute your first evaluation in < 5 minutes:
-
-### Step 1: Install
 ```bash
 git clone https://github.com/Flickerflash/junior-apogee-app.git
 cd junior-apogee-app
+python -m venv .venv
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
+python app.py
 ```
 
-### Step 2: Configure
-Copy `.env.example` to `.env` and set your LLM API key (OpenAI, Anthropic, or local).
+Then open `http://127.0.0.1:5000`.
 
-### Step 3: Run an Evaluation
-```bash
-python app.py --config configs/example_eval.json
-```
-
-This executes a sample evaluation task and outputs results to `results/sample_results.json`.
-
-For Docker: `docker-compose up --build` or `docker run -e API_KEY=<your-key> flickerflash/junior-apogee:latest`
-
----
-
-## Docker & Deployment
-
-**Docker**: Pre-built image available for cloud deployment.
+## Run Tests
 
 ```bash
-docker build -t junior-apogee .
-docker run -e OPENAI_API_KEY=$OPENAI_API_KEY junior-apogee
+python -m pytest tests -v
 ```
 
-**Docker Compose**: For local development with services.
+Or use the helper script:
 
 ```bash
-docker-compose -f docker-compose.yml up
+python scripts/run_eval.py --layer all -v
 ```
 
-See `Dockerfile` and `docker-compose.yml` for full configuration.
+## Generate a Sample Report
 
----
-
-## Example Evaluation Config
-
-See `configs/example_eval.json` for a sample evaluation specification:
-
-```json
-{
-  "name": "Agent Reasoning Test",
-  "task": "answer_question",
-  "input": "What are the main causes of climate change?",
-  "agents": ["Apogee", "Prodigy"],
-  "metrics": ["accuracy", "coherence", "bias"],
-  "threshold": 0.8
-}
+```bash
+python scripts/generate_report.py --tasks 5 --output reports/report.json
 ```
 
-Sample results are available in `results/sample_results.json` showing:
-- Per-agent scores (reasoning, tool-use, outcomes)
-- Compliance checks (OWASP Agentic Top 10)
-- Drift monitoring and trend analysis
-- HITL (Human-in-the-Loop) review flags
+## Package Smoke Check
+
+The packaged CLI exposes a simple info command:
+
+```bash
+python -m junior_apogee info
+```
+
+## Configuration
+
+- Copy `.env.example` to `.env` if you want local environment variables.
+- `OPENAI_API_KEY` or `ANTHROPIC_API_KEY` enables LLM-judge features.
+- YAML configuration lives in `config/agents.yaml`, `config/metrics.yaml`, and
+  `config/task_families.yaml`.
+
+## Docker
+
+A basic `Dockerfile` is included.
+
+```bash
+docker build -t junior-apogee-app .
+docker run -p 5000:5000 junior-apogee-app
+```
+
+There is currently no `docker-compose.yml` in the repository.

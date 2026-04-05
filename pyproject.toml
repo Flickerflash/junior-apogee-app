@@ -4,9 +4,9 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "junior-apogee-app"
-version = "0.1.0-beta"
+version = "0.1.0b0"
 description = "Production-ready AI agent evaluation and QA platform"
-authors = [{name = "Ndr (Flickerflash)"}]
+authors = [{ name = "Ndr (Flickerflash)" }]
 dependencies = [
     "pydantic>=2.0.0",
     "python-dotenv>=0.21.0",
@@ -23,6 +23,7 @@ dependencies = [
     "colorama>=0.4.6",
     "tqdm>=4.66.0",
     "loguru>=0.7.0",
+    "prometheus-client>=0.24.0",
     "mypy>=1.4.0",
     "types-requests>=2.31.0",
     "black>=23.0.0",
@@ -30,12 +31,17 @@ dependencies = [
     "isort>=5.12.0",
 ]
 
+[project.scripts]
+junior-apogee = "junior_apogee.cli:main"
+
 [tool.black]
 line-length = 88
 
 [tool.isort]
 profile = "black"
 
-[project.scripts]
-junior-apogee-app = "junior_apogee_app.__init__:main"
+[tool.setuptools]
+package-dir = { "" = "src" }
 
+[tool.setuptools.packages.find]
+where = ["src"]
