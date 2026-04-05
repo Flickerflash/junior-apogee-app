@@ -17,7 +17,13 @@ from src.junior_apogee.agents.profiles import AGENT_BASELINES, ALL_AGENTS
 from src.junior_apogee.evaluation.engine import EvaluationEngine
 from src.junior_apogee.governance.checker import GovernanceChecker
 from src.junior_apogee.metrics.aggregator import MetricsAggregator
-from src.junior_apogee.models import AgentName, AgentRun, EvalResult, TaskCase, TaskStatus
+from src.junior_apogee.models import (
+    AgentName,
+    AgentRun,
+    EvalResult,
+    TaskCase,
+    TaskStatus,
+)
 from src.junior_apogee.utils.helpers import format_score, setup_logger
 
 APP_VERSION = "0.1.0b0"
@@ -71,8 +77,14 @@ def make_synthetic_run(
     tool_calls: list[dict[str, object]] = []
     if agent in (AgentName.APOGEE, AgentName.PRODIGY):
         tool_calls = [
-            {"tool_name": "web_search", "parameters": {"query": "evaluation test"}},
-            {"tool_name": "data_analysis", "parameters": {"data": "sample_data"}},
+            {
+                "tool_name": "web_search",
+                "parameters": {"query": "evaluation test"},
+            },
+            {
+                "tool_name": "data_analysis",
+                "parameters": {"data": "sample_data"},
+            },
         ]
     elif agent == AgentName.COLLEEN:
         tool_calls = [
@@ -91,7 +103,11 @@ def make_synthetic_run(
     )
 
 
-def make_synthetic_task(family_id: str, agent: AgentName, task_id: str) -> TaskCase:
+def make_synthetic_task(
+    family_id: str,
+    agent: AgentName,
+    task_id: str,
+) -> TaskCase:
     return TaskCase(
         task_id=task_id,
         family_id=family_id,
@@ -131,7 +147,9 @@ def run_report(
         else list(ALL_AGENTS.keys())
     )
 
-    logger.info(f"Running evaluation for agents: {[agent.value for agent in target_agents]}")
+    logger.info(
+        f"Running evaluation for agents: {[agent.value for agent in target_agents]}"
+    )
     logger.info(f"Tasks per agent: {tasks_per_agent}")
 
     all_results: list[EvalResult] = []
@@ -154,7 +172,9 @@ def run_report(
             )
             for index in range(tasks_per_agent)
         ]
-        runs = [make_synthetic_run(agent, task.task_id, success_rate) for task in tasks]
+        runs = [
+            make_synthetic_run(agent, task.task_id, success_rate) for task in tasks
+        ]
 
         result = engine.evaluate_batch(tasks, runs)
         all_results.append(result)
