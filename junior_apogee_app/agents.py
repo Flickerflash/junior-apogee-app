@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Type
+from typing import Any, Type
 
 
 class Agent(ABC):
@@ -13,29 +13,22 @@ class Agent(ABC):
         self.name = name
 
     @abstractmethod
-    def run(self, task: Dict[str, Any]) -> Dict[str, Any]:
+    def run(self, task: dict[str, Any]) -> dict[str, Any]:
         """Execute a task and return result."""
-        pass
 
 
-# simple registry to keep track of available agent classes
-_agent_registry: List[Type[Agent]] = []
+_agent_registry: list[Type[Agent]] = []
 
 
 def register_agent(cls: Type[Agent]) -> Type[Agent]:
-    """Class decorator registering an Agent implementation.
-
-    Usage::
-
-        @register_agent
-        class MyAgent(Agent):
-            ...
-    """
+    """Register an Agent implementation class."""
     _agent_registry.append(cls)
     return cls
 
 
-def list_agents() -> List[str]:
+def list_agents() -> list[str]:
     """Return the names of all registered agent types."""
     return [cls.__name__ for cls in _agent_registry]
 
+
+from . import agents_example  # noqa: E402,F401
