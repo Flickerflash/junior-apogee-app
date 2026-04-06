@@ -1,7 +1,6 @@
-from __future__ import annotations
+from typing import Any, Optional
 
 from pydantic import BaseModel
-from typing import List, Dict, Any, Optional
 
 
 class TaskFamily(BaseModel):
@@ -15,7 +14,7 @@ class Task(BaseModel):
 
     id: str
     family: str
-    payload: Dict[str, Any]
+    payload: dict[str, Any]
     tenant: Optional[str]
 
 
@@ -23,7 +22,7 @@ class Result(BaseModel):
     """Result returned by an agent or evaluation layer."""
 
     task_id: str
-    data: Dict[str, Any]
+    data: dict[str, Any]
     success: bool
 
 
@@ -46,8 +45,7 @@ class AgentConfig(BaseModel):
 
 
 class Config(BaseModel):
-    task_families: Optional[List[TaskFamily]]
+    task_families: Optional[list[TaskFamily]]
     metrics: Optional[MetricsConfig]
-    agents: Optional[List[AgentConfig]]
+    agents: Optional[list[AgentConfig]]
     tenant: Optional[str]
-

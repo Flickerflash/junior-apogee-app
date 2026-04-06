@@ -1,14 +1,14 @@
 from __future__ import annotations
 
-from flask import Flask, jsonify, request, abort
+from typing import Any
+
+from flask import Flask, abort, jsonify, request
+from prometheus_client import CONTENT_TYPE_LATEST, Counter, generate_latest
 
 from .config_loader import load_full_config
 from .logging_config import configure_logging
 from .settings import Settings
-from prometheus_client import generate_latest, CONTENT_TYPE_LATEST, Counter
 
-
-# simple prometheus counter example
 REQUEST_COUNTER = Counter("ja_requests_total", "Total HTTP requests received")
 
 
@@ -18,27 +18,24 @@ def create_app() -> Flask:
     app = Flask(__name__)
 
     @app.before_request
-    def before():
+    def before() -> None:
         REQUEST_COUNTER.inc()
-        # token authentication
         settings = Settings()
         token = settings.api_key
         if token and request.headers.get("Authorization") != f"Bearer {token}":
             abort(401)
 
     @app.route("/health")
-    def health() -> Any:  # type: ignore[return-value]
+    def health() -> Any:
         return jsonify(status="ok")
 
     @app.route("/metrics")
-    def metrics() -> Any:  # type: ignore[return-value]
-        # reload config each call for hot-reload
+    def metrics() -> Any:
         config = load_full_config()
         return jsonify(metrics=config.metrics.dict() if config.metrics else {})
 
     @app.route("/openapi.json")
-    def openapi() -> Any:  # type: ignore[return-value]
-        # simple manual schema
+    def openapi() -> Any:
         schema = {
             "openapi": "3.0.0",
             "info": {"title": "Junior Apogee API", "version": "0.1.0"},
@@ -50,7 +47,7 @@ def create_app() -> Flask:
         return jsonify(schema)
 
     @app.route("/prometheus")
-    def prometheus_metrics():
+    def prometheus_metrics() -> tuple[bytes, int, dict[str, str]]:
         return generate_latest(), 200, {"Content-Type": CONTENT_TYPE_LATEST}
 
     return app

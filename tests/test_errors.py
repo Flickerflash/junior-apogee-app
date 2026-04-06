@@ -1,6 +1,6 @@
 import pytest
 
-from junior_apogee_app.errors import ConfigurationError, EvaluationError, AgentError
+from junior_apogee_app.errors import AgentError, ConfigurationError, EvaluationError
 
 
 def test_exceptions_inherit():

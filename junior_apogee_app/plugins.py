@@ -2,15 +2,15 @@ from __future__ import annotations
 
 from importlib import import_module
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 PLUGIN_DIR = Path(__file__).parent.parent / "plugins"
 
 
-def discover_plugins() -> List[str]:
+def discover_plugins() -> list[str]:
     if not PLUGIN_DIR.exists():
         return []
-    return [p.stem for p in PLUGIN_DIR.glob("*.py")]
+    return [plugin.stem for plugin in PLUGIN_DIR.glob("*.py")]
 
 
 def load_plugin(name: str) -> Any:
