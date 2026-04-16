@@ -31,14 +31,26 @@ dependencies = [
     "isort>=5.12.0",
 ]
 
+# fix(#4): include YAML config assets in the installed package
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"junior_apogee" = ["config/*.yaml", "config/*.yml", "py.typed"]
+
 [project.scripts]
-junior-apogee = "junior_apogee.cli:main"
+junior-apogee = "junior_apogee.cli:cli"
+# Legacy shim entry-point kept for backward compat; will be removed in v1.0.0
+junior-apogee-app = "junior_apogee_app.__init__:main"
 
 [tool.black]
 line-length = 88
 
+# fix(#5): scope isort to canonical src package only during legacy cleanup
 [tool.isort]
 profile = "black"
+known_first_party = ["junior_apogee"]
+skip = ["junior_apogee_app"]  # legacy shim — skip until retired in v1.0.0
 
 [tool.setuptools]
 package-dir = { "" = "src" }

@@ -1,0 +1,8 @@
+# CODEOWNERS — junior-apogee-app
+# Default owner for all files
+* @Flickerflash
+
+# Evaluation & benchmarks
+/docs/     @Flickerflash
+/tests/    @Flickerflash
+/eval/     @Flickerflash
