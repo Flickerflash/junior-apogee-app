@@ -1,8 +1,8 @@
-"""Smoke tests for Issue #6 — dashboard startup + legacy shim deprecation.
+"""Smoke tests for Issue #6 - dashboard startup + legacy shim deprecation.
 
 Tests:
   1. Flask app object is importable and is a Flask instance.
-  2. Flask app has required routes registered (/, /api/health, /api/agents).
+  2. Flask app has required routes registered (/, /health, /api/v1/agents).
   3. Legacy junior_apogee_app import emits DeprecationWarning.
   4. CLI entry-point is callable (tests/legacy shim delegates to .cli.cli).
   5. src.junior_apogee core modules are importable without side-effects.
@@ -18,7 +18,7 @@ from pathlib import Path
 import pytest
 
 # ---------------------------------------------------------------------------
-# Path setup — ensure repo root is on sys.path so `app` and `src` are found
+# Path setup - ensure repo root is on sys.path so `app` and `src` are found
 # ---------------------------------------------------------------------------
 ROOT = Path(__file__).parent.parent
 if str(ROOT) not in sys.path:
@@ -34,7 +34,7 @@ def test_flask_app_importable():
     from flask import Flask
 
     assert isinstance(dashboard_app.app, Flask), (
-        "dashboard_app.app is not a Flask instance — startup will fail"
+        "dashboard_app.app is not a Flask instance - startup will fail"
     )
 
 
@@ -42,11 +42,11 @@ def test_flask_app_importable():
 # Smoke Test 2: Required routes registered
 # ===========================================================================
 def test_dashboard_required_routes():
-    """Flask app must have at minimum /, /api/health, and /api/agents routes."""
+    """Flask app must have at minimum /, /health, and /api/v1/agents routes."""
     import app as dashboard_app  # noqa: PLC0415
 
     registered = {rule.rule for rule in dashboard_app.app.url_map.iter_rules()}
-    required_routes = {"/", "/api/health", "/api/agents"}
+    required_routes = {"/", "/health", "/api/v1/agents"}
     missing = required_routes - registered
     assert not missing, f"Missing required routes: {missing}"
 
@@ -60,16 +60,14 @@ def test_legacy_shim_emits_deprecation_warning():
     for mod in list(sys.modules.keys()):
         if mod.startswith("junior_apogee_app"):
             del sys.modules[mod]
-
     with warnings.catch_warnings(record=True) as caught:
         warnings.simplefilter("always")
         importlib.import_module("junior_apogee_app")
-
     deprecation_warnings = [
         w for w in caught if issubclass(w.category, DeprecationWarning)
     ]
     assert deprecation_warnings, (
-        "junior_apogee_app did not emit DeprecationWarning — shim not applied"
+        "junior_apogee_app did not emit DeprecationWarning - shim not applied"
     )
 
 
@@ -91,7 +89,7 @@ def test_core_modules_importable(module_path: str):
 
 
 # ===========================================================================
-# Smoke Test 5: CLI help exits 0 (subprocess — no external deps needed)
+# Smoke Test 5: CLI help exits 0 (subprocess - no external deps needed)
 # ===========================================================================
 def test_cli_info_exits_cleanly():
     """python -m junior_apogee_app --help must exit 0 (CLI delegate smoke)."""
@@ -103,5 +101,6 @@ def test_cli_info_exits_cleanly():
         timeout=15,
     )
     assert result.returncode == 0, (
-        f"CLI --help exited {result.returncode}.\nstdout: {result.stdout}\nstderr: {result.stderr}"
+        f"CLI --help exited {result.returncode}.\n"
+        f"stdout: {result.stdout}\nstderr: {result.stderr}"
     )
