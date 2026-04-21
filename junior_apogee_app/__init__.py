@@ -1,5 +1,5 @@
 __version__ = "0.1.0b0"
-
+"""
 This package is retained for backward-compatibility only.
 All canonical code lives in src/junior_apogee/.
 Do NOT add new functionality here.
@@ -21,7 +21,7 @@ def main() -> None:
 
 # Re-export main entry point so `python -m junior_apogee_app` still works
 def main() -> None:  # noqa: D103
-    """Thin wrapper — delegates to canonical CLI in src/junior_apogee."""
+    """Thin wrapper - delegates to canonical CLI in src/junior_apogee."""
     try:
         from junior_apogee.cli import cli  # type: ignore[import]
     except ImportError:  # fallback if src not yet on path
