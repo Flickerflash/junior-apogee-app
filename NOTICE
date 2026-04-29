@@ -1,0 +1,31 @@
+junior-apogee-app
+Copyright 2025-2026 Ndr "Ender" Hensel (Flickerflash)
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+---
+
+This project is the production QA evaluation platform for the Flickerflash DGAF ecosystem, featuring:
+- Agent Apogee evidence governance — Phase 1-4 source validation and multi-phase review
+- Agent Amethyst meta-orchestration and Gold Star certification authority
+- Agent Sentinel CI/CD integrity enforcement and guardrail activation
+- DGAF (Dynamic Governance Agentic Formation Framework) compliance alignment
+- NIST AI Risk Management Framework (AI RMF) evaluation protocols
+- OWASP Agentic Top 10 safety sweep integration
+- Rose Gold Submission framework and evidence scoring rubrics
+- Benchmark evaluation suite with multi-dimensional scoring
+
+Governance spine: https://github.com/Flickerflash/DGAF-Framework
+Agent Roster: https://github.com/Flickerflash/DGAF-Framework/blob/main/ENSEMBLE_ROSTER.md
+
+Designed for institutional and enterprise evaluation of AI system governance compliance.
